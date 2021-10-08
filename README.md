@@ -78,3 +78,7 @@ I also chose to use jest/enzyme for testing as that is what I have been most com
 up having to write up spyOn calls for (changing state in functional components or setting a ref) but for the sake of time I used testing that I had worked with in the past.
 
 I decided against including formik because the form required didn't need that much complication but included moment and lodash for the convenience of the included methods
+
+The project was built and runs with:
+node: v14.17.3
+npm: 6.14.13
