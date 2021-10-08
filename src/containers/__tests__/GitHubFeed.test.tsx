@@ -49,9 +49,10 @@ describe("GitHubFeed", (): void => {
    expect(wrapper.find('.GitHubFeed__body__title').text()).toBe('Commit Feed');
  });
 
- it("contains a single info", (): void => {
+ it("contains a single info with correct text", (): void => {
    wrapper = getComponent();
    expect(wrapper.find('.GitHubFeed__body__info').length).toEqual(1);
+   expect(wrapper.find('.GitHubFeed__body__info').text()).toBe('Showing results for /m3db/m3');
  });
 
  it("displays a loading animation by default", (): void => {
@@ -66,22 +67,29 @@ describe("GitHubFeed", (): void => {
  });
 
  it("displays the correct number of new feed items when done loading", (): void => {
-   buildUseStateSpy(defaultGitHubFeedResponse, false, [], 1);
+   buildUseStateSpy(defaultGitHubFeedResponse, false, '', []);
    wrapper = getComponent();
    expect(wrapper.find('GitHubFeedItem').length).toEqual(2);
  });
 
  it("displays a 'Load More' button when feed items are loaded", (): void => {
-   buildUseStateSpy(defaultGitHubFeedResponse, false, [], 1);
+   buildUseStateSpy(defaultGitHubFeedResponse, false, '', []);
    wrapper = getComponent();
    expect(wrapper.find('button').length).toEqual(1);
    expect(wrapper.find('button').text()).toBe('Load More');
  });
 
  it("displays the correct number of previous feed items when not done loading new data", (): void => {
-   buildUseStateSpy(defaultGitHubFeedResponse, true, defaultGitHubFeedResponse, 1);
+   buildUseStateSpy(defaultGitHubFeedResponse, true, '', defaultGitHubFeedResponse);
    wrapper = getComponent();
    expect(wrapper.find('GitHubFeedItem').length).toEqual(2);
+ });
+
+ it("successfully disabled Load More button on ref", (): void => {
+   jest.spyOn(React, 'useRef').mockReturnValueOnce({ current: true });
+   buildUseStateSpy(defaultGitHubFeedResponse, false, '', []);
+   wrapper = getComponent();
+   expect(wrapper.find('button').prop('disabled')).toBeTruthy();
  });
 
 });

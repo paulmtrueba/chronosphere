@@ -1,30 +1,32 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { withRouter } from "react-router";
 import * as Router from 'react-router-dom';
 import _ from 'lodash';
+
+import parseLinkHeader from '../../lib/parseLinkHeader';
 
 import GitHubFeedItem from '../../components/GitHubFeedItem';
 import LoadingAnimation from '../../components/LoadingAnimation';
 
 export const GitHubFeed = (): JSX.Element => {
-  const githubToken = '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';
-  // const perPage = 100;
+  const githubToken = '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';
+  const perPage = 25;
   const history = Router.useHistory();
   const { owner, repo }: { owner: string, repo: string } = Router.useParams();
-  const didMountRef = useRef(false);
+  const disableLoad = React.useRef(false);
 
   let [feedItems, setFeedItems] = React.useState([]);
 
   let [feedItemsLoading, setFeedItemsLoading] = React.useState(true);
 
+  let [link, setLink] = React.useState(
+    `https://api.github.com/repos/${owner}/${repo}/commits?page=1&per_page=${perPage}`
+  );
+
   let [newFeedItems, setNewFeedItems] = React.useState([]);
 
-  let [pageNumber, setPageNumber] = React.useState(1);
-
-  let [perPage, setPerPage] = React.useState(25);
-
-  useEffect((): void => {
-    const url: string = `https://api.github.com/repos/${owner}/${repo}/commits?page=${pageNumber}&per_page=${perPage}`;
+  React.useEffect((): void => {
+    const url: string = link;
     const requestHeaders: HeadersInit = new Headers();
     const token: string = `Bearer ${githubToken}`;
     requestHeaders.set('Authorization', token);
@@ -35,20 +37,19 @@ export const GitHubFeed = (): JSX.Element => {
       url,
       options,
     ).then(response => {
+        const linkResponseHeader = parseLinkHeader(response.headers.get('link'));
+        if (_.isEmpty(_.get(linkResponseHeader, 'next', ''))) {
+          disableLoad.current = true;
+        }
+        // @ts-expect-error
+        setLink(linkResponseHeader.next);
         if (response.ok) {
           return response.json();
         }
         throw response;
       })
       .then(data => {
-        // was messing around with ways to load in smaller chunks of data
-        // and was using this to split the new items apart from the ones moved into feedItems
-        const newFeedReturn = [...feedItems, ...data];
-        const onlyUniques = _.filter(newFeedReturn, (value) => {
-          return _.countBy(newFeedReturn, ['sha', value.sha]).true === 1;
-        });
-        // @ts-expect-error
-        setNewFeedItems(onlyUniques);
+        setNewFeedItems(data);
       })
       .catch(error => {
         history.push('/chronosphere/does/not/exist');
@@ -59,26 +60,9 @@ export const GitHubFeed = (): JSX.Element => {
       setFeedItemsLoading(true);
       getFeedItems();
   }, [
+    feedItems,
     history,
-    pageNumber,
-    owner,
-    repo,
-    perPage,
   ])
-
-  useEffect((): void => {
-    if (didMountRef.current) {
-      if (perPage < 100) {
-        setPerPage(perPage += 25);
-      } else {
-        setPageNumber(pageNumber += 1);
-        setPerPage(25);
-      }
-    } else {
-      didMountRef.current = true;
-    }
-  }, [feedItems])
-
 
   return(
     <div className="GitHubFeed">
@@ -105,6 +89,7 @@ export const GitHubFeed = (): JSX.Element => {
               ))}
               <button
                 className="GitHubFeed__body__content__button"
+                disabled={disableLoad.current}
                 onClick={(): void => setFeedItems(newFeedItems)}
               >
                 Load More

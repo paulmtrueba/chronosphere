@@ -18,7 +18,7 @@ describe("GitHubFeedItem", (): void => {
   });
 
  it("renders correctly", (): void => {
-   shallow(<GitHubFeedItem />);
+   shallow(<GitHubFeedItem { ...mockedProps }/>);
  });
 
  it("correctly renders the item data provided to the component", (): void => {
