@@ -9,7 +9,7 @@ import GitHubFeedItem from '../../components/GitHubFeedItem';
 import LoadingAnimation from '../../components/LoadingAnimation';
 
 export const GitHubFeed = (): JSX.Element => {
-  const githubToken = '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';
+  const githubToken = process.env.REACT_APP_PERSONAL_ACCESS_TOKEN;
   const perPage = 25;
   const history = Router.useHistory();
   const { owner, repo }: { owner: string, repo: string } = Router.useParams();
