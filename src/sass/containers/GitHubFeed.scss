@@ -1,0 +1,23 @@
+.GitHubFeed {
+  background-color: gainsboro;
+  &__body {
+    overflow: auto;
+    padding: 0 33%;
+    scroll-behavior: smooth;
+    &__content {
+      &__button {
+        cursor: pointer;
+        font-size: 1.25rem;
+        height: 2rem;
+        margin-bottom: 2rem;
+        width: 33%;
+      }
+    }
+    &__info {
+      text-align: left;
+    }
+    &__title {
+      text-align: left;
+    }
+  }
+}

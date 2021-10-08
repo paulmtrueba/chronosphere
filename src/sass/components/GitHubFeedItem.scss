@@ -1,0 +1,19 @@
+.GitHubFeedItem {
+  background-color: #fff;
+  border: 1px solid #000;
+  box-shadow: 5px 5px 5px #000;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  &__data {
+    flex-direction: row;
+    padding-bottom: .5rem;
+    &__label {
+      font-weight: bold;
+    }
+    &__element {
+      line-break: anywhere;
+    }
+  }
+}
