@@ -68,3 +68,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### Synopsis
+After completing work I'm wondering if it might have been a better idea to just leave this project as JS.
+I have an understanding of Typescript and have built a couple storybook elements and my current company's code test using it but I feel like I'd have a lot better understanding of how everything was setup if it was all
+left in JS rather than having to reference quite a bit of Stackoverflow to correct Typescript errors. I, sadly, had to leave in several expect-error comments.
+
+I also chose to use jest/enzyme for testing as that is what I have been most comfortable with. I have done a lot of research into the jest react-testing-library and know that it can handle all of the cases that I ended
+up having to write up spyOn calls for (changing state in functional components or setting a ref) but for the sake of time I used testing that I had worked with in the past.
+
+I decided against including formik because the form required didn't need that much complication but included moment and lodash for the convenience of the included methods
