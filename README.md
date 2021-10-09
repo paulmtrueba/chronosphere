@@ -77,7 +77,9 @@ left in JS rather than having to reference quite a bit of Stackoverflow to corre
 I also chose to use jest/enzyme for testing as that is what I have been most comfortable with. I have done a lot of research into the jest react-testing-library and know that it can handle all of the cases that I ended
 up having to write up spyOn calls for (changing state in functional components or setting a ref) but for the sake of time I used testing that I had worked with in the past.
 
-I decided against including formik because the form required didn't need that much complication but included moment and lodash for the convenience of the included methods
+I decided against including formik because the form required didn't need that much complication but included moment and lodash for the convenience of the included methods.
+
+I tried to build out some yaml that could grab a Github secret containing a personal access token but didn't have much luck so you will have to paste a token into the .env file as the value for the REACT_APP_PERSONAL_ACCESS_TOKEN env variable
 
 The project was built and runs with:
 node: v14.17.3

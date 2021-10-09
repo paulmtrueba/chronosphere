@@ -26,7 +26,6 @@ export const GitHubFeed = (): JSX.Element => {
   let [newFeedItems, setNewFeedItems] = React.useState([]);
 
   React.useEffect((): void => {
-    const url: string = link;
     const requestHeaders: HeadersInit = new Headers();
     const token: string = `Bearer ${githubToken}`;
     requestHeaders.set('Authorization', token);
@@ -34,15 +33,15 @@ export const GitHubFeed = (): JSX.Element => {
       headers: requestHeaders,
     };
     const getFeedItems = async() => fetch(
-      url,
+      link,
       options,
     ).then(response => {
         const linkResponseHeader = parseLinkHeader(response.headers.get('link'));
-        if (_.isEmpty(_.get(linkResponseHeader, 'next', ''))) {
+        const next = _.get(linkResponseHeader, 'next', '');
+        if (_.isEmpty(next)) {
           disableLoad.current = true;
         }
-        // @ts-expect-error
-        setLink(linkResponseHeader.next);
+        setLink(next);
         if (response.ok) {
           return response.json();
         }
@@ -56,6 +55,12 @@ export const GitHubFeed = (): JSX.Element => {
       })
       .finally(() => {
         setFeedItemsLoading(false);
+        if (!_.isEmpty(feedItems)) {
+          const element_to_scroll_to = document.querySelectorAll('.GitHubFeed__body__prev')[0];
+          element_to_scroll_to.scrollIntoView({
+            block: 'end',
+          });
+        }
       })
       setFeedItemsLoading(true);
       getFeedItems();
